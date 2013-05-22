@@ -1,2 +1,3 @@
-jQzoom Evolution Library - Javascript Image magnifier
+jQZoom Evolution 2.3 Library
 ==================================================
+Javascript Image magnifier
