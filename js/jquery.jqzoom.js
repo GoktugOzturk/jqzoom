@@ -26,7 +26,7 @@
   $.fn.jqzoom = function(options){
     return this.each(function(){
       var node = this.nodeName.toLowerCase();
-      if(node == 'a'){
+      if(node == "a"){
         new jqzoom(this, options);
       }
     });
@@ -39,7 +39,7 @@
     var obj = this;
     var settings = $.extend({}, $.jqzoom.defaults, options || {});
     obj.el = el;
-    el.rel = $(el).attr('rel');
+    el.rel = $(el).attr("rel");
     // ANCHOR ELEMENT
     el.zoom_active = false;
     el.zoom_disabled = false; // to disable single zoom instance
@@ -50,13 +50,13 @@
     el.mousepos = {};
     el.mouseDown = false;
     $(el).css({
-      'outline-style': 'none',
-      'text-decoration': 'none'
+      "outline-style": "none",
+      "text-decoration": "none"
     });
     // BASE IMAGE
     var img = $("img:eq(0)", el);
-    el.title = $(el).attr('title');
-    el.imagetitle = img.attr('title');
+    el.title = $(el).attr("title");
+    el.imagetitle = img.attr("title");
     var zoomtitle = ($.trim(el.title).length > 0) ? el.title : el.imagetitle;
     var smallimage = new Smallimage(img);
     var lens = new Lens();
@@ -64,23 +64,23 @@
     var largeimage = new Largeimage();
     var loader = new Loader();
     // preventing default click,allowing the onclick event [exmple: lightbox]
-    $(el).bind('click', function(e){
+    $(el).bind("click", function(e){
       e.preventDefault();
       return false;
     });
     // setting the default zoomType if not in settings
-    var zoomtypes = ['standard', 'drag', 'innerzoom', 'reverse'];
+    var zoomtypes = ["standard", "drag", "innerzoom", "reverse"];
     if($.inArray($.trim(settings.zoomType), zoomtypes) < 0){
-      settings.zoomType = 'standard';
+      settings.zoomType = "standard";
     }
     $.extend(obj, {
       create: function(){ // create the main objects
         // create ZoomPad
         if($(".zoomPad", el).length == 0){
-          el.zoomPad = $('<div/>').addClass('zoomPad');
+          el.zoomPad = $("<div/>").addClass("zoomPad");
           img.wrap(el.zoomPad);
         }
-        if(settings.zoomType == 'innerzoom'){
+        if(settings.zoomType == "innerzoom"){
           settings.zoomWidth = smallimage.w;
           settings.zoomHeight = smallimage.h;
         }
@@ -97,14 +97,14 @@
           loader.append();
         }
         // preloading images
-        if(settings.preloadImages || settings.zoomType == 'drag' || settings.alwaysOn){
+        if(settings.preloadImages || settings.zoomType == "drag" || settings.alwaysOn){
           obj.load();
         }
         obj.init();
       },
       init: function(){
         // drag option
-        if(settings.zoomType == 'drag'){
+        if(settings.zoomType == "drag"){
           $(".zoomPad", el).mousedown(function(){
             el.mouseDown = true;
           });
@@ -115,20 +115,20 @@
             return false;
           };
           $(".zoomPad", el).css({
-            cursor: 'default'
+            cursor: "default"
           });
           $(".zoomPup", el).css({
-            cursor: 'move'
+            cursor: "move"
           });
         }
-        if(settings.zoomType == 'innerzoom'){
+        if(settings.zoomType == "innerzoom"){
           $(".zoomWrapper", el).css({
-            cursor: 'crosshair'
+            cursor: "crosshair"
           });
         }
-        $(".zoomPad", el).bind('mouseenter mouseover', function(event){
-          img.attr('title', '');
-          $(el).attr('title', '');
+        $(".zoomPad", el).bind("mouseenter mouseover", function(event){
+          img.attr("title", "");
+          $(el).attr("title", "");
           el.zoom_active = true;
           // if loaded then activate else load large image
           smallimage.fetchdata();
@@ -138,29 +138,29 @@
             obj.load();
           }
         });
-        $(".zoomPad", el).bind('mouseleave', function(event){
+        $(".zoomPad", el).bind("mouseleave", function(event){
           obj.deactivate();
         });
-        $(".zoomPad", el).bind('mousemove', function(e){
+        $(".zoomPad", el).bind("mousemove", function(e){
           // prevent fast mouse mevements not to fire the mouseout event
           if(e.pageX > smallimage.pos.r || e.pageX < smallimage.pos.l || e.pageY < smallimage.pos.t || e.pageY > smallimage.pos.b){
             lens.setcenter();
             return false;
           }
           el.zoom_active = true;
-          if(el.largeimageloaded && !$('.zoomWindow', el).is(':visible')){
+          if(el.largeimageloaded && !$(".zoomWindow", el).is(":visible")){
             obj.activate(e);
           }
-          if(el.largeimageloaded && (settings.zoomType != 'drag' || (settings.zoomType == 'drag' && el.mouseDown))){
+          if(el.largeimageloaded && (settings.zoomType != "drag" || (settings.zoomType == "drag" && el.mouseDown))){
             lens.setposition(e);
           }
         });
         var thumb_preload = new Array();
         // binding click event on thumbnails
         var thumblist = new Array();
-        thumblist = $('a').filter(function(){
+        thumblist = $("a").filter(function(){
           var regex = new RegExp("gallery[\\s]*:[\\s]*'" + $.trim(el.rel) + "'", "i");
-          var rel = $(this).attr('rel');
+          var rel = $(this).attr("rel");
           if(regex.test(rel)){ return this; }
         });
         if(thumblist.length > 0){
@@ -171,15 +171,15 @@
           thumblist.each(function(){
             // preloading thumbs
             if(settings.preloadImages){
-              var thumb_options = $.extend({}, eval("(" + $.trim($(this).attr('rel')) + ")"));
+              var thumb_options = $.extend({}, eval("(" + $.trim($(this).attr("rel")) + ")"));
               thumb_preload[i] = new Image();
               thumb_preload[i].src = thumb_options.largeimage;
               i++;
             }
             $(this).click(function(e){
-              if($(this).hasClass('zoomThumbActive')){ return false; }
+              if($(this).hasClass("zoomThumbActive")){ return false; }
               thumblist.each(function(){
-                $(this).removeClass('zoomThumbActive');
+                $(this).removeClass("zoomThumbActive");
               });
               e.preventDefault();
               obj.swapimage(this);
@@ -190,7 +190,7 @@
       },
       load: function(){
         if(el.largeimageloaded == false && el.largeimageloading == false){
-          var url = $(el).attr('href');
+          var url = $(el).attr("href");
           el.largeimageloading = true;
           largeimage.loadimage(url);
         }
@@ -203,12 +203,12 @@
       },
       deactivate: function(e){
         switch(settings.zoomType){
-          case 'drag':
+          case "drag":
             // nothing or lens.setcenter();
             break;
           default:
-            img.attr('title', el.imagetitle);
-            $(el).attr('title', el.title);
+            img.attr("title", el.imagetitle);
+            $(el).attr("title", el.title);
             if(settings.alwaysOn){
               lens.setcenter();
             }else{
@@ -224,27 +224,27 @@
         el.largeimageloading = false;
         el.largeimageloaded = false;
         var options = new Object();
-        options = $.extend({}, eval("(" + $.trim($link.attr('rel')) + ")"));
+        options = $.extend({}, eval("(" + $.trim($link.attr("rel")) + ")"));
         if(options.smallimage && options.largeimage){
           var smallimage = options.smallimage;
           var largeimage = options.largeimage;
-          $link.addClass('zoomThumbActive');
-          $(el).attr('href', largeimage);
-          img.attr('src', smallimage);
+          $link.addClass("zoomThumbActive");
+          $(el).attr("href", largeimage);
+          img.attr("src", smallimage);
           lens.hide();
           stage.hide();
           obj.load();
           // set and show the zoom wrapper title, if specified
           if(settings.title){
-            $('.zoomWrapperTitle', el).hide();
-            var zoomtitle = $.trim($link.attr('title'));
+            $(".zoomWrapperTitle", el).hide();
+            var zoomtitle = $.trim($link.attr("title"));
             if(zoomtitle != ""){
-              $('.zoomWrapperTitle', el).html(zoomtitle).show();
+              $(".zoomWrapperTitle", el).html(zoomtitle).show();
             }
           }
         }else{
-          alert('ERROR :: Missing parameter for largeimage or smallimage.');
-          throw 'ERROR :: Missing parameter for largeimage or smallimage.';
+          alert("ERROR :: Missing parameter for largeimage or smallimage.");
+          throw "ERROR :: Missing parameter for largeimage or smallimage.";
         }
         return false;
       }
@@ -264,17 +264,17 @@
       this.node = image[0];
       this.findborder = function(){
         var bordertop = 0;
-        bordertop = image.css('border-top-width');
-        btop = '';
+        bordertop = image.css("border-top-width");
+        btop = "";
         var borderleft = 0;
-        borderleft = image.css('border-left-width');
-        bleft = '';
+        borderleft = image.css("border-left-width");
+        bleft = "";
         if(bordertop){
           for(i = 0; i < 3; i++){
             var x = [];
             x = bordertop.substr(i, 1);
             if(isNaN(x) == false){
-              btop = btop + '' + bordertop.substr(i, 1);
+              btop = btop + "" + bordertop.substr(i, 1);
             }else{
               break;
             }
@@ -307,8 +307,8 @@
         $obj.bottomlimit = image.offset().top + $obj.oh;
       };
       this.node.onerror = function(){
-        alert('Problems while loading image.');
-        throw 'Problems while loading image.';
+        alert("Problems while loading image.");
+        throw "Problems while loading image.";
       };
       this.node.onload = function(){
         $obj.fetchdata();
@@ -323,8 +323,8 @@
     function Loader(){
       var $obj = this;
       this.append = function(){
-        this.node = $('<div/>').addClass('zoomPreload').css('visibility', 'hidden').html(settings.preloadText);
-        $('.zoomPad', el).append(this.node);
+        this.node = $("<div/>").addClass("zoomPreload").css("visibility", "hidden").html(settings.preloadText);
+        $(".zoomPad", el).append(this.node);
       };
       this.show = function(){
         this.node.top = (smallimage.oh - this.node.height()) / 2;
@@ -333,12 +333,12 @@
         this.node.css({
           top: this.node.top,
           left: this.node.left,
-          position: 'absolute',
-          visibility: 'visible'
+          position: "absolute",
+          visibility: "visible"
         });
       };
       this.hide = function(){
-        this.node.css('visibility', 'hidden');
+        this.node.css("visibility", "hidden");
       };
       return this;
     }
@@ -347,10 +347,10 @@
      */
     function Lens(){
       var $obj = this;
-      this.node = $('<div/>').addClass('zoomPup');
+      this.node = $("<div/>").addClass("zoomPup");
       this.append = function(){
-        $('.zoomPad', el).append($(this.node).hide());
-        if(settings.zoomType == 'reverse'){
+        $(".zoomPad", el).append($(this.node).hide());
+        if(settings.zoomType == "reverse"){
           this.image = new Image();
           this.image.src = smallimage.node.src; // fires off async
           $(this.node).empty().append(this.image);
@@ -365,22 +365,22 @@
         this.node.css({
           top: 0,
           left: 0,
-          width: this.node.w + 'px',
-          height: this.node.h + 'px',
-          position: 'absolute',
-          display: 'none',
-          borderWidth: 1 + 'px'
+          width: this.node.w + "px",
+          height: this.node.h + "px",
+          position: "absolute",
+          display: "none",
+          borderWidth: "1px"
         });
-        if(settings.zoomType == 'reverse'){
+        if(settings.zoomType == "reverse"){
           this.image.src = smallimage.node.src;
           $(this.node).css({
-            'opacity': 1
+            "opacity": 1
           });
           $(this.image).css({
-            position: 'absolute',
-            display: 'block',
-            left: -(this.node.left + 1 - smallimage.bleft) + 'px',
-            top: -(this.node.top + 1 - smallimage.btop) + 'px'
+            position: "absolute",
+            display: "block",
+            left: -(this.node.left + 1 - smallimage.bleft) + "px",
+            top: -(this.node.top + 1 - smallimage.btop) + "px"
           });
         }
       };
@@ -393,12 +393,12 @@
           top: this.node.top,
           left: this.node.left
         });
-        if(settings.zoomType == 'reverse'){
+        if(settings.zoomType == "reverse"){
           $(this.image).css({
-            position: 'absolute',
-            display: 'block',
-            left: -(this.node.left + 1 - smallimage.bleft) + 'px',
-            top: -(this.node.top + 1 - smallimage.btop) + 'px'
+            position: "absolute",
+            display: "block",
+            left: -(this.node.left + 1 - smallimage.bleft) + "px",
+            top: -(this.node.top + 1 - smallimage.btop) + "px"
           });
         }
         // centering large image
@@ -424,33 +424,33 @@
         this.node.left = lensleft;
         this.node.top = lenstop;
         this.node.css({
-          'left': lensleft + 'px',
-          'top': lenstop + 'px'
+          left: lensleft + "px",
+          top: lenstop + "px"
         });
-        if(settings.zoomType == 'reverse'){
+        if(settings.zoomType == "reverse"){
           $(this.node).empty().append(this.image);
           $(this.image).css({
-            position: 'absolute',
-            display: 'block',
-            left: -(this.node.left + 1 - smallimage.bleft) + 'px',
-            top: -(this.node.top + 1 - smallimage.btop) + 'px'
+            position: "absolute",
+            display: "block",
+            left: -(this.node.left + 1 - smallimage.bleft) + "px",
+            top: -(this.node.top + 1 - smallimage.btop) + "px"
           });
         }
         largeimage.setposition();
       };
       this.hide = function(){
         img.css({
-          'opacity': 1
+          "opacity": 1
         });
         this.node.hide();
       };
       this.show = function(){
-        if(settings.zoomType != 'innerzoom' && (settings.lens || settings.zoomType == 'drag')){
+        if(settings.zoomType != "innerzoom" && (settings.lens || settings.zoomType == "drag")){
           this.node.show();
         }
-        if(settings.zoomType == 'reverse'){
+        if(settings.zoomType == "reverse"){
           img.css({
-            'opacity': settings.imageOpacity
+            opacity: settings.imageOpacity
           });
         }
       };
@@ -467,12 +467,12 @@
      */
     function Stage(){
       var $obj = this;
-      this.node = $("<div class='zoomWindow'><div class='zoomWrapper'><div class='zoomWrapperTitle'></div><div class='zoomWrapperImage'></div></div></div>");
+      this.node = $('<div class="zoomWindow"><div class="zoomWrapper"><div class="zoomWrapperTitle"></div><div class="zoomWrapperImage"></div></div></div>');
       this.ieframe = $('<iframe class="zoomIframe" src="javascript:\'\';" marginwidth="0" marginheight="0" align="bottom" scrolling="no" frameborder="0" ></iframe>');
       this.setposition = function(){
         this.node.leftpos = 0;
         this.node.toppos = 0;
-        if(settings.zoomType != 'innerzoom'){
+        if(settings.zoomType != "innerzoom"){
           // positioning
           switch(settings.position){
             case "left":
@@ -499,49 +499,49 @@
           }
         }
         this.node.css({
-          'left': this.node.leftpos + 'px',
-          'top': this.node.toppos + 'px'
+          left: this.node.leftpos + "px",
+          top: this.node.toppos + "px"
         });
         return this;
       };
       this.append = function(){
-        $('.zoomPad', el).append(this.node);
+        $(".zoomPad", el).append(this.node);
         this.node.css({
-          position: 'absolute',
-          display: 'none',
+          position: "absolute",
+          display: "none",
           zIndex: 5001
         });
-        if(settings.zoomType == 'innerzoom'){
+        if(settings.zoomType == "innerzoom"){
           this.node.css({
-            cursor: 'default'
+            cursor: "default"
           });
           var thickness = (smallimage.bleft == 0) ? 1 : smallimage.bleft;
-          $('.zoomWrapper', this.node).css({
-            borderWidth: thickness + 'px'
+          $(".zoomWrapper", this.node).css({
+            borderWidth: thickness + "px"
           });
         }
-        $('.zoomWrapper', this.node).css({
-          width: Math.round(settings.zoomWidth) + 'px',
-          borderWidth: thickness + 'px'
+        $(".zoomWrapper", this.node).css({
+          width: Math.round(settings.zoomWidth) + "px",
+          borderWidth: thickness + "px"
         });
-        $('.zoomWrapperImage', this.node).css({
-          width: '100%',
-          height: Math.round(settings.zoomHeight) + 'px'
+        $(".zoomWrapperImage", this.node).css({
+          width: "100%",
+          height: Math.round(settings.zoomHeight) + "px"
         });
         // zoom title
-        $('.zoomWrapperTitle', this.node).css({
-          width: '100%',
-          position: 'absolute'
+        $(".zoomWrapperTitle", this.node).css({
+          width: "100%",
+          position: "absolute"
         });
-        $('.zoomWrapperTitle', this.node).hide();
+        $(".zoomWrapperTitle", this.node).hide();
         if(settings.title && zoomtitle.length > 0){
-          $('.zoomWrapperTitle', this.node).html(zoomtitle).show();
+          $(".zoomWrapperTitle", this.node).html(zoomtitle).show();
         }
         $obj.setposition();
       };
       this.hide = function(){
         switch(settings.hideEffect){
-          case 'fadeout':
+          case "fadeout":
             this.node.fadeOut(settings.fadeoutSpeed, function(){
             });
             break;
@@ -553,7 +553,7 @@
       };
       this.show = function(){
         switch(settings.showEffect){
-          case 'fadein':
+          case "fadein":
             this.node.fadeIn();
             this.node.fadeIn(settings.fadeinSpeed, function(){
             });
@@ -574,18 +574,18 @@
         // showing preload
         loader.show();
         this.url = url;
-        this.node.style.position = 'absolute';
-        this.node.style.border = '0px';
-        this.node.style.display = 'none';
-        this.node.style.left = '-5000px';
-        this.node.style.top = '0px';
+        this.node.style.position = "absolute";
+        this.node.style.border = "0px";
+        this.node.style.display = "none";
+        this.node.style.left = "-5000px";
+        this.node.style.top = "0px";
         document.body.appendChild(this.node);
         this.node.src = url; // fires off async
       };
       this.fetchdata = function(){
         var image = $(this.node);
         var scale = {};
-        this.node.style.display = 'block';
+        this.node.style.display = "block";
         $obj.w = image.width();
         $obj.h = image.height();
         $obj.pos = image.offset();
@@ -597,7 +597,7 @@
         scale.y = ($obj.h / smallimage.h);
         el.scale = scale;
         document.body.removeChild(this.node);
-        $('.zoomWrapperImage', el).empty().append(this.node);
+        $(".zoomWrapperImage", el).empty().append(this.node);
         // setting lens dimensions;
         lens.setdimensions();
       };
@@ -607,7 +607,7 @@
         loader.hide();
         el.largeimageloading = false;
         el.largeimageloaded = true;
-        if(settings.zoomType == 'drag' || settings.alwaysOn){
+        if(settings.zoomType == "drag" || settings.alwaysOn){
           lens.show();
           stage.show();
           lens.setcenter();
@@ -617,18 +617,18 @@
         var left = -el.scale.x * (lens.getoffset().left - smallimage.bleft + 1);
         var top = -el.scale.y * (lens.getoffset().top - smallimage.btop + 1);
         $(this.node).css({
-          'left': left + 'px',
-          'top': top + 'px'
+          left: left + "px",
+          top: top + "px"
         });
       };
       return this;
     }
     $(el).data("jqzoom", obj);
   };
-  // es. $.jqzoom.disable('#jqzoom1');
+  // es. $.jqzoom.disable("#jqzoom1");
   $.jqzoom = {
     defaults: {
-      zoomType: 'standard',
+      zoomType: "standard",
       // innerzoom/standard/reverse/drag
       zoomWidth: 300,
       // zoomWindow default width
@@ -644,26 +644,26 @@
       // zoomWindow default position
       preloadImages: true,
       // image preload
-      preloadText: 'Loading zoom',
+      preloadText: "Loading zoom",
       title: true,
       lens: true,
       imageOpacity: 0.4,
       alwaysOn: false,
-      showEffect: 'show',
+      showEffect: "show",
       // show/fadein
-      hideEffect: 'hide',
+      hideEffect: "hide",
       // hide/fadeout
-      fadeinSpeed: 'slow',
+      fadeinSpeed: "slow",
       // fast/slow/number
-      fadeoutSpeed: '2000' // fast/slow/number
+      fadeoutSpeed: "2000" // fast/slow/number
     },
     disable: function(el){
-      var api = $(el).data('jqzoom');
+      var api = $(el).data("jqzoom");
       api.disable();
       return false;
     },
     enable: function(el){
-      var api = $(el).data('jqzoom');
+      var api = $(el).data("jqzoom");
       api.enable();
       return false;
     },
